@@ -1,0 +1,102 @@
+# Schema Definition
+schema {
+    query: Query
+    mutation: Mutation
+}
+
+# Query Definitions
+type Query {
+    # Pets
+    allPets: [Pet]
+    petById(id: Int!): Pet
+    petsByAnimalType(animalType: String!): [Pet!]!
+    petsByBreedOrderedByAge(breed: String!): [Pet!]!
+    petStatistics: PetStatistics!
+    petNameAndBreed: [PetNameBreedDTO!]!
+
+    # Households
+    allHouseholds: [Household!]!
+    householdByIdWithoutPets(eircode: String!): Household
+    householdByIdWithPets(eircode: String!): Household
+    householdsWithNoPets: [Household!]!
+    ownerOccupiedHouseholds: [Household!]!
+    householdStatistics: HouseholdStatistics!
+}
+
+# Mutation Definitions
+type Mutation {
+    # Pets
+    createPet(input: CreatePetInput!): Pet!
+    updatePet(id: Int!, input: UpdatePetInput!): Pet!
+    deletePet(id: Int!): Boolean!
+
+    # Households
+    createHousehold(input: CreateHouseholdInput!): Household!
+    updateHousehold(eircode: String!, input: UpdateHouseholdInput!): Household!
+    deleteHousehold(eircode: String!): Boolean!
+}
+
+# Object Types
+type Pet {
+    id: Int!
+    name: String!
+    animalType: String!
+    breed: String!
+    age: Int!
+    household: Household
+}
+
+type Household {
+    eircode: String!
+    numberOfOccupants: Int!
+    maxNumberOfOccupants: Int!
+    ownerOccupied: Boolean!
+    pets: [Pet!]!
+}
+
+type PetNameBreedDTO {
+    name: String!
+    animalType: String!
+    breed: String!
+}
+
+type PetStatistics {
+    averageAge: Float!
+    maxAge: Int!
+    totalCount: Int!
+}
+
+type HouseholdStatistics {
+    emptyHouses: Int!
+    fullHouses: Int!
+}
+
+# Input Types
+input CreatePetInput {
+    name: String!
+    animalType: String!
+    breed: String!
+    age: Int!
+    householdEircode: String
+}
+
+input UpdatePetInput {
+    name: String
+    animalType: String
+    breed: String
+    age: Int
+    householdEircode: String!
+}
+
+input CreateHouseholdInput {
+    eircode: String!
+    numberOfOccupants: Int!
+    maxNumberOfOccupants: Int!
+    ownerOccupied: Boolean!
+}
+
+input UpdateHouseholdInput {
+    numberOfOccupants: Int
+    maxNumberOfOccupants: Int
+    ownerOccupied: Boolean
+}
